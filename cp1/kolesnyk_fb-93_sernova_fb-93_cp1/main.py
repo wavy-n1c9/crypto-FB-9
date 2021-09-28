@@ -28,17 +28,24 @@ def entrop_let(str_txt, filename, letters):
     filename.write(str(sorted_dict))
     filename.write("\nEntrop: " + str(entr))
 
-
-def entrop_bigr1(lett, textbigr,filename):
+'''
+def entrop_bigr1(lett, textbigr, filename, cross, txt):
     lentxt=len(textbigr)
     alph_l=len(lett)
     mass_bigr = [[lett[k] + lett[i] for i in range(alph_l)] for k in range(alph_l)]
-    values=[[None]*lentxt]*lentxt
-    for i in range(alph_l):
-        for j in range(alph_l):
-            freq=(textbigr.count(mass_bigr[i][j]) / lentxt)
-            values[i][j] = freq
-            mass_bigr[i][j]= mass_bigr[i][j]+(" is ")+str(freq)
+    values=[[None]*alph_l]*alph_l
+    if cross==True:
+        for i in range(alph_l):
+            for j in range(alph_l):
+                freq=(textbigr.count(mass_bigr[i][j]) / (len(txt)-1))
+                values[i][j] = freq
+                mass_bigr[i][j]= mass_bigr[i][j]+(" is ")+str(freq)
+    else:
+        for i in range(alph_l):
+            for j in range(alph_l):
+                freq=(textbigr.count(mass_bigr[i][j]) / (len(txt)/2))
+                values[i][j] = freq
+                mass_bigr[i][j]= mass_bigr[i][j]+(" is ")+str(freq)
     for i in range(alph_l):
         for j in range(alph_l):
             filename.write(mass_bigr[i][j]+" ")
@@ -50,7 +57,39 @@ def entrop_bigr1(lett, textbigr,filename):
             if (values[i][j] != 0):
                 entr = entr + (-(values[i][j]) * (math.log2(values[i][j])))
     filename.write("Entropy is: " + str(entr))
+'''
 
+
+
+def entrop_bigr1(lett, text, filename, cross):
+    alph_l = len(lett)
+
+    mass_bigr = [[lett[k] + lett[i] for i in range(alph_l)] for k in range(alph_l)]
+    values=[[0 for i in range(alph_l)] for k in range(alph_l)]
+
+    for i in range(0, len(text)-1):
+         s1=lett.find(text[i])
+         s2=lett.find(text[i+1])
+         values[s1][s2]+=1
+    if cross==True:
+        for i in range(0, alph_l):
+            for j in range(alph_l):
+                values[i][j]=values[i][j] / (len(text) - 1)
+    else:
+        for i in range(alph_l):
+            for j in range(alph_l):
+                values[i][j] = values[i][j] / (len(text))
+    entr = 0
+    for i in range(alph_l):
+        for j in range(alph_l):
+            if (values[i][j] != 0):
+                entr += (values[i][j] * (math.log2(values[i][j])))
+    entr=-entr/2
+    for i in range(alph_l):
+        for j in range(alph_l):
+            filename.write(" " + mass_bigr[i][j]+" -> "+str(values[i][j])+" " )
+        filename.write("\n")
+    filename.write("Entropy is: " + str(entr))
 
 
 alpha = "абвгдежзийклмнопрстуфхцчшщыьэюя"
@@ -65,14 +104,14 @@ file2.write("entrop for letters, no spaces")
 entrop_let(text_str_nsp, file2, alpha)
 
 
-# Розбиття тексту на біграми
 
-txtbigramcross = [text_str_nsp[i:i+2] for i in range(len(text_str_nsp))] #перехресна
-txtbigramnocross = [text_str_nsp[i:i+2] for i in range(0, len(text_str_nsp), 2)] # не перехресна
+
 file2.write("\nBigram cross, no spaces \n")
-entrop_bigr1(alpha, txtbigramcross, file2)
+croos_val=True
+entrop_bigr1(alpha, text_str_nsp, file2, croos_val)
 file2.write("\nBigram for no cross, no spaces \n")
-entrop_bigr1(alpha, txtbigramnocross, file2)
+croos_val=False
+entrop_bigr1(alpha, text_str_nsp, file2,croos_val)
 
 
 #Робимо теж саме, але з пробілами
@@ -82,13 +121,12 @@ text_sp = filesp.read()
 file2.write("\nEntrop for letters, with spaces\n")
 entrop_let(text_sp, file2, alpha2)
 
-txtbigramcross = [text_sp[i:i+2] for i in range(len(text_sp))] #перехресна
-txtbigramnocross = [text_sp[i:i+2] for i in range(0, len(text_sp), 2)] # не перехресна
-
 file2.write("\nBigram cross, with spaces \n")
-entrop_bigr1(alpha2, txtbigramcross, file2)
+croos_val=True
+entrop_bigr1(alpha2, text_sp,file2,croos_val)
 file2.write("\nBigram for no cross, with spaces \n")
-entrop_bigr1(alpha2, txtbigramnocross, file2)
+croos_val=False
+entrop_bigr1(alpha2, text_sp, file2,croos_val,)
 
 file2.close()
 filesp.close()

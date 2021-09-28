@@ -25,8 +25,7 @@ def entrop_let(str_txt, filename, letters):
                 break
 
     filename.write("\n" + "Sorted dict(letter+freq):\n")
-    for let in letters:
-        filename.write(str(let)+" is "+str(sorted_dict[let])+"\n")
+    filename.write(str(sorted_dict))
     filename.write("\nEntrop: " + str(entr))
 
 
@@ -64,6 +63,7 @@ text_str_nsp = filensp.read()
 file2.write("Letters, no spaces: ")
 file2.write("entrop for letters, no spaces")
 entrop_let(text_str_nsp, file2, alpha)
+
 
 # Розбиття тексту на біграми
 

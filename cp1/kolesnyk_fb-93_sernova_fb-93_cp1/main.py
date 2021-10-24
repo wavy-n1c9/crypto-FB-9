@@ -41,7 +41,11 @@ def entrop_bigr1(lett, textbigr,filename):
             mass_bigr[i][j]= mass_bigr[i][j]+(" is ")+str(freq)
     for i in range(alph_l):
         for j in range(alph_l):
+<<<<<<< Updated upstream
             filename.write(mass_bigr[i][j]+" ")
+=======
+            filename.write(" " + mass_bigr[i][j]+" -> "+str(values[i][j])+" ")
+>>>>>>> Stashed changes
         filename.write("\n")
     #Пошук ентропії
     entr=0
